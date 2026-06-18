@@ -291,8 +291,12 @@ Generated: {timestamp}
 
     def _format_forecast_plain(self, forecast: Dict) -> str:
         """Format a single forecast as plain text."""
+        date_obj = datetime.strptime(forecast['target_date'], '%Y-%m-%d')
+        day_label = date_obj.strftime('%A, %B %-d')
+        days_ahead = forecast.get('days_ahead', 0)
+        ahead_str = "Today" if days_ahead == 0 else ("Tomorrow" if days_ahead == 1 else f"{days_ahead} days ahead")
         text = "="*60 + "\n"
-        text += f"Date: {forecast['target_date']} ({forecast.get('days_ahead', 0)} days ahead)\n"
+        text += f"{day_label} ({ahead_str})\n"
         text += "="*60 + "\n\n"
 
         # Temperature
@@ -367,9 +371,13 @@ Generated: {timestamp}
 
     def _format_forecast_html(self, forecast: Dict) -> str:
         """Format a single forecast as HTML."""
+        date_obj = datetime.strptime(forecast['target_date'], '%Y-%m-%d')
+        day_label = date_obj.strftime('%A, %B %-d')
+        days_ahead = forecast.get('days_ahead', 0)
+        ahead_str = "Today" if days_ahead == 0 else ("Tomorrow" if days_ahead == 1 else f"{days_ahead} days ahead")
         html = f"""
         <div class="forecast-card">
-            <h2>{forecast['target_date']} ({forecast.get('days_ahead', 0)} days ahead)</h2>
+            <h2>{day_label} <span style="font-size:0.7em; color:#7f8c8d;">({ahead_str})</span></h2>
         """
 
         # Temperature
