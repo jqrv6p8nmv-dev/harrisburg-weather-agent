@@ -2,6 +2,19 @@
 
 An intelligent weather monitoring agent that tracks forecasts from the National Weather Service for Harrisburg International Airport (KMDT), learns from forecast accuracy over time, and sends email updates every 6 hours.
 
+## Status: Decommissioned (2026-09-20)
+
+The Digital Ocean droplet running this agent was destroyed on 2026-09-20. The agent is not currently running anywhere.
+
+End-of-life processing before destruction:
+- **Backup**: live app code, `.env`, a consistent SQLite snapshot (via `sqlite3 .backup`), the systemd unit file, service logs, and system info were pulled from the droplet to the local machine and verified (checksum match, tar integrity, `PRAGMA integrity_check`, non-empty file checks). Not stored in this repo, since it includes live credentials and a much larger database than the copy checked in here.
+- **Cron jobs**: none existed. Scheduling was handled by the agent's internal loop plus `systemd Restart=always`, not cron.
+- **Credentials**: the Brevo API key and SMTP password were revoked, and the Digital Ocean authorized IP entry was removed from the Brevo console.
+- **DNS / networking**: confirmed no DNS records pointed at the droplet's IP, no reverse DNS was set, and the public IP was not a reserved/floating IP, so nothing else needed releasing.
+- **Digital Ocean console**: no snapshots or backups existed for the droplet.
+
+To revive this agent, a new server would need a fresh `.env` (see Email Configuration below) with new Brevo credentials, since the old ones are revoked.
+
 ## Features
 
 - Fetches weather forecasts for up to 2 days ahead from NWS API
